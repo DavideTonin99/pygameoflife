@@ -56,10 +56,8 @@ def game_board_transition():
 
             if game_board[row][column] > 0:
                 if alive_neighbours == 2 or alive_neighbours == 3:
-                    if game_board[row][column] < 6:
-                        game_board[row][column] += 1
-                else:
-                    game_board[row][column] = 0
+                    if game_board[row][column] < 6: game_board[row][column] += 1
+                else: game_board[row][column] = 0
             else:
                 if alive_neighbours == 3: game_board[row][column] = 1
 
