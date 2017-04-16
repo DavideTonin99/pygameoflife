@@ -74,7 +74,8 @@ def draw_game_board(game_window):
             if game_board[row][column] > 0:
                 if color == "red": alive_color = (game_board[row][column]*40, 0, 0)
                 elif color == "green": alive_color = (0, game_board[row][column]*40, 0)
-                else: alive_color = (0, 0, game_board[row][column]*40)
+                elif color == "blue": alive_color = (0, 0, game_board[row][column]*40)
+                elif color == "cyan": alive_color = (0, game_board[row][column]*40, game_board[row][column]*40)
                 pygame.draw.rect(game_window, alive_color, [column*CELL_SIZE, row*CELL_SIZE, CELL_SIZE, CELL_SIZE])
 
 
@@ -105,6 +106,9 @@ if __name__ == '__main__':
                     color = "green"
                 if event.key == K_b:
                     color = "blue"
+                if event.key == K_c:
+                    color = "cyan"
+
         pygame.Surface.fill(game_window, (0, 0, 0))
 
         game_board_transition()
@@ -116,7 +120,7 @@ if __name__ == '__main__':
             pygame.font.SysFont("Open Sans", 30).render("Press SPACE or RETURN to restart the game", 1, (255, 255, 255)), (20, 50))
         game_window.blit(
             pygame.font.SysFont("Open Sans", 30).render(
-                "Press r (red), g (green), b (blue)", 1, (255, 255, 255)), (20, HEIGHT-40))
+                "Press r (red), g (green), b (blue), c (cyan)", 1, (255, 255, 255)), (20, HEIGHT-40))
 
         pygame.display.update()
         clock.tick(FPS)
