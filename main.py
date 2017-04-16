@@ -53,7 +53,7 @@ def game_board_transition():
                 try:
                     if previous_game_board[row][column-1] > 0: alive_neighbours += 1
                 except IndexError: pass
-
+            
             if game_board[row][column] > 0:
                 if alive_neighbours == 2 or alive_neighbours == 3:
                     if game_board[row][column] < 6: game_board[row][column] += 1
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     pygame.init()
 
     GAME_RESOLUTION = WIDTH, HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
-    game_window = pygame.display.set_mode(GAME_RESOLUTION, FULLSCREEN|HWACCEL|HWSURFACE)
+    game_window = pygame.display.set_mode(GAME_RESOLUTION, FULLSCREEN|HWSURFACE|DOUBLEBUF)
     clock = pygame.time.Clock()
 
     pygame.font.init()
@@ -118,7 +118,7 @@ if __name__ == '__main__':
             pygame.font.SysFont("Open Sans", 30).render(
                 "Press r (red), g (green), b (blue), c (cyan)", 1, (255, 255, 255)), (20, HEIGHT-40))
 
-        pygame.display.update()
+        pygame.display.flip()
         clock.tick(FPS)
 
     pygame.quit()
