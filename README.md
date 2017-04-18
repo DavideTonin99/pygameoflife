@@ -18,3 +18,4 @@ You need to have installed:
         - b: blue
         - g: green
         - c: cyan
+        - w: white
