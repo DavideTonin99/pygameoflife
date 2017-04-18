@@ -10,6 +10,7 @@ __author__ = "Davide Tonin"
 game_ended = False; game_stop = False; FPS = 60; CELL_SIZE = 20
 total_cells, alive_cells = 0, 0
 game_board = None
+board_changed = False; initialized_board = False
 color = "red"
 
 
@@ -17,6 +18,7 @@ def init_board():
     """Initialize the game board with random alive and dead cells"""
     global game_board
     game_board = np.random.randint(2, size=(HEIGHT//CELL_SIZE, WIDTH//CELL_SIZE))
+
 
 def game_board_transition():
     """Parse the game board, count neighbours and do the transition to the next step"""
@@ -70,6 +72,7 @@ def game_board_transition():
 
 
 def resize_board(action):
+    """ Resize the game board """
     global game_board, CELL_SIZE
     if action == "+": CELL_SIZE += 1
     else: CELL_SIZE -= 1
@@ -111,39 +114,30 @@ if __name__ == '__main__':
     pygame.font.init()
     text_settings = pygame.font.SysFont("Open Sans", 25)
 
-    init_board()
+    init_board(); initialized_board = True
 
     while not game_ended:
         # Event handler
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_ended = True
+            if event.type == pygame.QUIT: game_ended = True
             if event.type == KEYDOWN:
-                if event.key == K_ESCAPE or event.key == K_F4:
-                    game_ended = True
-                if event.key == K_RETURN:
-                    init_board()
-                if event.key == K_SPACE:
-                    game_stop = not game_stop
-                if event.key == K_r:
-                    color = "red"
-                if event.key == K_g:
-                    color = "green"
-                if event.key == K_b:
-                    color = "blue"
-                if event.key == K_c:
-                    color = "cyan"
-                if event.key == K_w:
-                    color = "white"
-                if event.key == K_p or event.key == K_PLUS:
-                    resize_board("+")
-                if event.key == K_m or event.key == K_MINUS:
-                    resize_board("-")
+                if event.key == K_ESCAPE or event.key == K_F4: game_ended = True
+                if event.key == K_RETURN:                      init_board(); board_changed = True; initialized_board = True
+                if event.key == K_SPACE:                       game_stop = not game_stop
+                if event.key == K_r:                           color = "red"; board_changed = True
+                if event.key == K_g:                           color = "green"; board_changed = True
+                if event.key == K_b:                           color = "blue"; board_changed = True
+                if event.key == K_c:                           color = "cyan"; board_changed = True
+                if event.key == K_w:                           color = "white"; board_changed = True
+                if event.key == K_p or event.key == K_PLUS:    resize_board("+"); board_changed = True
+                if event.key == K_m or event.key == K_MINUS:   resize_board("-"); board_changed = True
 
-        if not game_stop:
+        if not game_stop or board_changed == True:
             pygame.Surface.fill(game_window, (0, 0, 0))
 
-            game_board_transition()
+
+            if not initialized_board: game_board_transition()
+            else: initialized_board = not initialized_board
             draw_game_board()
 
             total_cells = (WIDTH // CELL_SIZE) * (HEIGHT // CELL_SIZE)
@@ -152,6 +146,7 @@ if __name__ == '__main__':
             game_window.blit(text_settings.render("Total cells: "+str(total_cells), True, (255, 255, 255)), (20, 50))
             game_window.blit(text_settings.render("Alive cells: " + str(alive_cells)+", "+str(round(alive_cells*100/total_cells, 2))+"%", True,(255, 255, 255)), (20, 80))
 
+            if board_changed: board_changed = not board_changed
             pygame.display.flip()
             clock.tick(FPS)
 
