@@ -22,7 +22,6 @@ def game_board_transition():
     """Parse the game board, count neighbours and do the transition to the next step"""
     global game_board, game_ended, alive_cells
     previous_game_board = np.copy(game_board)
-
     alive_cells = 0
     for row in range(game_board.shape[0]):
         for column in range(game_board[row].shape[0]):
@@ -70,6 +69,22 @@ def game_board_transition():
             if game_board[row][column] > 0: alive_cells += 1
 
 
+def resize_board(action):
+    global game_board, CELL_SIZE
+    if action == "+": CELL_SIZE += 1
+    else: CELL_SIZE -= 1
+
+    new_game_board = np.zeros((HEIGHT//CELL_SIZE, WIDTH//CELL_SIZE), dtype=int)
+
+    for row in range(game_board.shape[0]):
+        for column in range(game_board[row].shape[0]):
+            try: new_game_board[row][column] = game_board[row][column]
+            except: pass
+
+    game_board = np.copy(new_game_board)
+
+
+
 def draw_game_board():
     """Draw the game board"""
     global game_window, game_board, color
@@ -92,8 +107,6 @@ if __name__ == '__main__':
     game_window = pygame.display.set_mode(GAME_RESOLUTION, FULLSCREEN|HWSURFACE|DOUBLEBUF)
     pygame.display.set_caption("PyGameOfLife, "+__author__)
     clock = pygame.time.Clock()
-
-    total_cells = (WIDTH // CELL_SIZE) * (HEIGHT // CELL_SIZE)
 
     pygame.font.init()
     text_settings = pygame.font.SysFont("Open Sans", 25)
@@ -122,12 +135,18 @@ if __name__ == '__main__':
                     color = "cyan"
                 if event.key == K_w:
                     color = "white"
+                if event.key == K_p or event.key == K_PLUS:
+                    resize_board("+")
+                if event.key == K_m or event.key == K_MINUS:
+                    resize_board("-")
 
         if not game_stop:
             pygame.Surface.fill(game_window, (0, 0, 0))
 
             game_board_transition()
             draw_game_board()
+
+            total_cells = (WIDTH // CELL_SIZE) * (HEIGHT // CELL_SIZE)
 
             game_window.blit(text_settings.render("FPS: "+str(round(clock.get_fps(), 2)), True, (255, 255, 255)), (20, 20))
             game_window.blit(text_settings.render("Total cells: "+str(total_cells), True, (255, 255, 255)), (20, 50))
