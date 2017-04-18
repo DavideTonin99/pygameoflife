@@ -7,7 +7,8 @@ import numpy as np
 
 __author__ = "Davide Tonin"
 
-game_ended = False; FPS = 60; CELL_SIZE = 20
+game_ended = False; game_stop = False; FPS = 60; CELL_SIZE = 20
+total_cells, alive_cells = 0, 0
 game_board = None
 color = "red"
 
@@ -19,9 +20,10 @@ def init_board():
 
 def game_board_transition():
     """Parse the game board, count neighbours and do the transition to the next step"""
-    global game_board, game_ended
+    global game_board, game_ended, alive_cells
     previous_game_board = np.copy(game_board)
 
+    alive_cells = 0
     for row in range(game_board.shape[0]):
         for column in range(game_board[row].shape[0]):
             alive_neighbours = 0
@@ -56,15 +58,18 @@ def game_board_transition():
             
             if game_board[row][column] > 0:
                 if alive_neighbours == 2 or alive_neighbours == 3:
-                    if game_board[row][column] < 6: game_board[row][column] += 1
+                    if game_board[row][column] < 6:
+                        game_board[row][column] += 1
+                        alive_cells += 1
                 else: game_board[row][column] = 0
             else:
                 if alive_neighbours == 3: game_board[row][column] = 1
 
 
-def draw_game_board(game_window):
+def draw_game_board():
     """Draw the game board"""
-    global game_board, color
+    global game_window, game_board, color
+    alive_color = (255, 255, 255)
     for row in range(game_board.shape[0]):
         for column in range(game_board[row].shape[0]):
             if game_board[row][column] > 0:
@@ -82,7 +87,10 @@ if __name__ == '__main__':
     game_window = pygame.display.set_mode(GAME_RESOLUTION, FULLSCREEN|HWSURFACE|DOUBLEBUF)
     clock = pygame.time.Clock()
 
+    total_cells = (WIDTH // CELL_SIZE) * (HEIGHT // CELL_SIZE)
+
     pygame.font.init()
+    text_settings = pygame.font.SysFont("Open Sans", 25)
 
     init_board()
 
@@ -94,8 +102,10 @@ if __name__ == '__main__':
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE or event.key == K_F4:
                     game_ended = True
-                if event.key == K_RETURN or event.key == K_SPACE:
+                if event.key == K_RETURN:
                     init_board()
+                if event.key == K_SPACE:
+                    game_stop = not game_stop
                 if event.key == K_r:
                     color = "red"
                 if event.key == K_g:
@@ -105,21 +115,18 @@ if __name__ == '__main__':
                 if event.key == K_c:
                     color = "cyan"
 
-        pygame.Surface.fill(game_window, (0, 0, 0))
+        if not game_stop:
+            pygame.Surface.fill(game_window, (0, 0, 0))
 
-        game_board_transition()
-        draw_game_board(game_window)
+            game_board_transition()
+            draw_game_board()
 
-        game_window.blit(
-            pygame.font.SysFont("Open Sans", 30).render("FPS: "+str(round(clock.get_fps(), 2)), True, (255, 255, 255)), (20, 20))
-        game_window.blit(
-            pygame.font.SysFont("Open Sans", 30).render("Press SPACE or RETURN to restart the game", 1, (255, 255, 255)), (20, 50))
-        game_window.blit(
-            pygame.font.SysFont("Open Sans", 30).render(
-                "Press r (red), g (green), b (blue), c (cyan)", 1, (255, 255, 255)), (20, HEIGHT-40))
+            game_window.blit(text_settings.render("FPS: "+str(round(clock.get_fps(), 2)), True, (255, 255, 255)), (20, 20))
+            game_window.blit(text_settings.render("Total cells: "+str(total_cells), True, (255, 255, 255)), (20, 50))
+            game_window.blit(text_settings.render("Alive cells: " + str(alive_cells), True,(255, 255, 255)), (20, 80))
 
-        pygame.display.flip()
-        clock.tick(FPS)
+            pygame.display.flip()
+            clock.tick(FPS)
 
     pygame.quit()
     exit()
