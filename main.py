@@ -10,7 +10,7 @@ __author__ = "Davide Tonin"
 game_ended = False; game_stop = False; FPS = 60; CELL_SIZE = 20
 total_cells, alive_cells = 0, 0
 game_board = None
-board_changed = False; initialized_board = False
+board_changed = False; stop_transition = False
 color = "red"
 
 
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     pygame.font.init()
     text_settings = pygame.font.SysFont("Open Sans", 25)
 
-    init_board(); initialized_board = True
+    init_board(); stop_transition = True
 
     while not game_ended:
         # Event handler
@@ -122,13 +122,13 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT: game_ended = True
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE or event.key == K_F4: game_ended = True
-                if event.key == K_RETURN:                      init_board(); board_changed = True; initialized_board = True
+                if event.key == K_RETURN:                      init_board(); board_changed = True; stop_transition = True
                 if event.key == K_SPACE:                       game_stop = not game_stop
-                if event.key == K_r:                           color = "red"; board_changed = True
-                if event.key == K_g:                           color = "green"; board_changed = True
-                if event.key == K_b:                           color = "blue"; board_changed = True
-                if event.key == K_c:                           color = "cyan"; board_changed = True
-                if event.key == K_w:                           color = "white"; board_changed = True
+                if event.key == K_r:                           color = "red"; board_changed = True; stop_transition = True
+                if event.key == K_g:                           color = "green"; board_changed = True; stop_transition = True
+                if event.key == K_b:                           color = "blue"; board_changed = True; stop_transition = True
+                if event.key == K_c:                           color = "cyan"; board_changed = True; stop_transition = True
+                if event.key == K_w:                           color = "white"; board_changed = True; stop_transition = True
                 if event.key == K_p or event.key == K_PLUS:    resize_board("+"); board_changed = True
                 if event.key == K_m or event.key == K_MINUS:   resize_board("-"); board_changed = True
 
@@ -136,8 +136,8 @@ if __name__ == '__main__':
             pygame.Surface.fill(game_window, (0, 0, 0))
 
 
-            if not initialized_board: game_board_transition()
-            else: initialized_board = not initialized_board
+            if not stop_transition: game_board_transition()
+            else: stop_transition = not stop_transition
             draw_game_board()
 
             total_cells = (WIDTH // CELL_SIZE) * (HEIGHT // CELL_SIZE)
