@@ -1,8 +1,7 @@
-# pygameoflife
-Simulation of Game of Life
----
+# PyGameOfLife
 
 ## Requirements
+
 You need to have installed:
 - Python
 - pygame
@@ -10,9 +9,12 @@ You need to have installed:
 
 --- 
 ## Game
-Press SPACE or RETURN to restart the game
-Press one of the letter below to change the color of the alive cells:
-- r: red
-- b: blue
-- g: green
-- c: cyan
+
+    Press ESC or F4 to quit the game
+    Press RETURN to restart the game
+    Press SPACE to stop or resume the game
+    Press one of the letter below to change the color of the alive cells:
+        - r: red
+        - b: blue
+        - g: green
+        - c: cyan
