@@ -176,10 +176,8 @@ if __name__ == '__main__':
                 if event.key == K_b:                           color = "blue"; board_changed = True
                 if event.key == K_c:                           color = "cyan"; board_changed = True
                 if event.key == K_w:                           color = "white"; board_changed = True
-                if event.key == K_p or event.key == K_PLUS:    resize_board(
-                    "+"); game_stop = False; board_changed = True
-                if event.key == K_m or event.key == K_MINUS:   resize_board(
-                    "-"); game_stop = False; board_changed = True
+                if event.key == K_p or event.key == K_PLUS:    resize_board("+"); game_stop = False; board_changed = True
+                if event.key == K_m or event.key == K_MINUS:   resize_board("-"); game_stop = False; board_changed = True
             if event.type == MOUSEBUTTONDOWN:
                 mouse_clicked = True
             if event.type == MOUSEBUTTONUP:
