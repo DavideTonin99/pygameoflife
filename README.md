@@ -21,3 +21,4 @@ You need to have installed:
         - g: green
         - c: cyan
         - w: white
+    When the game is stopped, you can click and move the mouse to select new cells
