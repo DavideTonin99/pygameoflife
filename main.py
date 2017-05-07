@@ -11,7 +11,6 @@ __author__ = "Davide Tonin"
 game_ended = False
 game_stop = False
 board_changed = False
-cells_selected = False
 
 CELL_SIZE = 20
 FPS = 60
@@ -144,7 +143,6 @@ def select_cells():
             game_board[row][col] += 1
         if game_board[row][col] == 1:
             alive_cells += 1
-        cells_selected = True
     except:
         pass
 
