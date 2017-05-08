@@ -34,58 +34,37 @@ def game_board_transition():
     for row in range(game_board.shape[0]):
         for column in range(game_board[row].shape[0]):
             alive_neighbours = 0
-            # control of  the above row
+
             if row > 0:
                 if column > 0 and previous_game_board[row - 1][column - 1] > 0:
                     alive_neighbours += 1
+
                 if previous_game_board[row - 1][column] > 0:
                     alive_neighbours += 1
 
-                try:
-                    if previous_game_board[row - 1][column + 1] > 0:
-                        alive_neighbours += 1
-                except IndexError:
-                    pass
-
-            # control of the right neighbours
-            try:
-                if previous_game_board[row][column + 1] > 0:
+                if column < game_board[row].shape[0]-1 and previous_game_board[row - 1][column + 1] > 0:
                     alive_neighbours += 1
-            except IndexError:
-                pass
 
-            # control of the below row
-            try:
-                if previous_game_board[row + 1][column + 1] > 0:
+            if column > 0 and previous_game_board[row][column-1] > 0:
+                alive_neighbours += 1
+
+            if column < game_board[row].shape[0]-1 and previous_game_board[row][column + 1] > 0:
+                alive_neighbours += 1
+
+            if row < game_board.shape[0]-1:
+                if column > 0 and previous_game_board[row + 1][column - 1] > 0:
                     alive_neighbours += 1
-            except IndexError:
-                pass
 
-            try:
                 if previous_game_board[row + 1][column] > 0:
                     alive_neighbours += 1
-            except IndexError:
-                pass
-
-            if column > 0:
-                try:
-                    if previous_game_board[row + 1][column - 1] > 0:
+                
+                if column < game_board[row].shape[0]-1 and previous_game_board[row + 1][column + 1] > 0:
                         alive_neighbours += 1
-                except IndexError:
-                    pass
-
-                # control of the left neighbours
-                try:
-                    if previous_game_board[row][column - 1] > 0:
-                        alive_neighbours += 1
-                except IndexError:
-                    pass
 
             if game_board[row][column] > 0:
                 if alive_neighbours == 2 or alive_neighbours == 3:
                     if game_board[row][column] < 6:
                         game_board[row][column] += 1
-
                 else:
                     game_board[row][column] = 0
             else:
